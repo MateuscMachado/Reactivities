@@ -47,14 +47,31 @@ namespace API
             app.UseReferrerPolicy(opt => opt.NoReferrer());
             app.UseXXssProtection(opt => opt.EnabledWithBlockMode());
             app.UseXfo(opt => opt.Deny());
-            app.UseCsp(opt => opt
+            app.UseCspReportOnly(opt => opt
                 .BlockAllMixedContent()
-                .StyleSources(s => s.Self().CustomSources("https://fonts.googleapis.com"))
-                .FontSources(s => s.Self().CustomSources("https://fonts.gstatic.com", "data:"))
+                .StyleSources(s => s.Self().CustomSources(
+                    "https://fonts.googleapis.com",
+                    "sha256-/epqQuRElKW1Z83z1Sg8Bs2MKi99Nrq41Z3fnS2Nrgk=",
+                    "sha256-yChqzBduCCi4o4xdbXRXh4U/t1rP4UUUMJt+rB+ylUI="
+                ))
+                .FontSources(s => s.Self().CustomSources(
+                    "https://fonts.gstatic.com",
+                    "data:"
+                ))
                 .FormActions(s => s.Self())
                 .FrameSources(s => s.Self())
-                .ImageSources(s => s.Self().CustomSources("https://res.cloudinary.com"))
-                .ScriptSources(s => s.Self().CustomSources("sha256-FCKK2u/htSujgga3ySbMzeCyU1LTDPO/YBSpdlenT4I="))
+                .ImageSources(s => s.Self().CustomSources(
+                    "https://res.cloudinary.com",
+                    "https://www.facebook.com",
+                    "https://platform-lookaside.fbsbx.com"
+                ))
+                .ScriptSources(s => s.Self().CustomSources(
+                    "sha256-FCKK2u/htSujgga3ySbMzeCyU1LTDPO/YBSpdlenT4I=",
+                    "sha256-FCKK2u/htSujgga3ySbMzeCyU1LTDPO/YBSpdlenT4I=",
+                    "sha256-FCKK2u/htSujgga3ySbMzeCyU1LTDPO/YBSpdlenT4I=",
+                    "https://connect.facebook.net",
+                    "sha256-Iwez5YpyBW6d0eW0sP/YccATT+bHS6NCUfAwyG+/O+8="
+                ))
             );
 
             if (env.IsDevelopment())
@@ -71,7 +88,7 @@ namespace API
                 });
             }
 
-            // app.UseHttpsRedirection();
+            app.UseHttpsRedirection();
 
             app.UseRouting();
 
