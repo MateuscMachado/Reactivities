@@ -21,9 +21,11 @@ namespace API.Extensions
             services.AddIdentityCore<AppUser>(opt =>
             {
                 opt.Password.RequireNonAlphanumeric = false;
+                opt.SignIn.RequireConfirmedEmail = true;
             })
             .AddEntityFrameworkStores<DataContext>()
-            .AddSignInManager<SignInManager<AppUser>>();
+            .AddSignInManager<SignInManager<AppUser>>()
+            .AddDefaultTokenProviders();
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(config["TokenKey"]));
 
@@ -64,6 +66,11 @@ namespace API.Extensions
             services.AddScoped<TokenService>();
 
             return services;
+        }
+
+        private static void AddDefaultTokenProviders()
+        {
+            throw new NotImplementedException();
         }
     }
 }

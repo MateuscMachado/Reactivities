@@ -17,6 +17,8 @@ import LoadingComponent from './LoadingComponent';
 import NavBar from './NavBar';
 import PrivateRoute from './PrivateRoute';
 import './styles.css';
+import RegisterSuccess from '../../features/users/RegisterSuccess';
+import ConfirmEmail from '../../features/users/ConfirmEmail';
 
 function App() {
   const location = useLocation();
@@ -50,6 +52,8 @@ function App() {
                 <PrivateRoute path='/profiles/:username' component={ProfilePage} />
                 <PrivateRoute path='/errors' component={TestError} />
                 <Route path='/server-error' component={ServerError} />
+                <Route path='/account/registerSuccess' component={RegisterSuccess} />
+                <Route path='/account/verifyEmail' component={ConfirmEmail} />
                 <Route component={NotFound} />
               </Switch>
             </Container>

@@ -34,7 +34,7 @@ axios.interceptors.response.use(async response => {
     switch (status) {
         case 400:
             if (config.method === 'get' && data.errors.hasOwnProperty('id')) {
-                history.push('/not-found')
+                history.push('/not-found');
             }
             if (data.errors) {
                 const modalStateErrors = [];
@@ -49,7 +49,7 @@ axios.interceptors.response.use(async response => {
             }
             break;
         case 401:
-            if (status === 401 && headers['www-authenticate'].startsWith('Bearer error="invalid_token"')) {
+            if (status === 401 && headers['www-authenticate']?.startsWith('Bearer error="invalid_token"')) {
                 store.userStore.logout();
                 toast.error('Session expired - please login again');
             }
@@ -59,7 +59,7 @@ axios.interceptors.response.use(async response => {
             break;
         case 500:
             store.commonStore.setServerError(data);
-            history.push('/server-error')
+            history.push('/server-error');
             break;
     }
     return Promise.reject(error);
@@ -75,7 +75,7 @@ const requests = {
 }
 
 const Activities = {
-    list: (params: URLSearchParams) => axios.get<PaginatedResult<Activity[]>>('/activities', {params}).then(responseBody),
+    list: (params: URLSearchParams) => axios.get<PaginatedResult<Activity[]>>('/activities', { params }).then(responseBody),
     details: (id: string) => requests.get<Activity>(`/activities/${id}`),
     create: (activity: ActivityFormValues) => requests.post<void>('/activities', activity),
     update: (activity: ActivityFormValues) => requests.put<void>(`/activities/${activity.id}`, activity),
@@ -88,7 +88,9 @@ const Account = {
     login: (user: UserFormValues) => requests.post<User>('/account/login', user),
     register: (user: UserFormValues) => requests.post<User>('/account/register', user),
     fbLogin: (accessToken: string) => requests.post<User>(`/account/fbLogin?accessToken=${accessToken}`, {}),
-    refreshToken: () => requests.post<User>('/account/refreshToken', {})
+    refreshToken: () => requests.post<User>('/account/refreshToken', {}),
+    verifyEmail: (token: string, email: string) => requests.post<void>(`/account/verifyEmail?token=${token}&email=${email}`, {}),
+    resendEmailConfirm: (email: string) => requests.get(`/account/resendEmailConfirmationLink?email=${email}`)
 }
 
 const Profiles = {
@@ -97,13 +99,13 @@ const Profiles = {
         let formData = new FormData();
         formData.append('File', file);
         return axios.post<Photo>('photos', formData, {
-            headers: {'Content-type': 'multipart/form-data'}
+            headers: { 'Content-type': 'multipart/form-data' }
         })
     },
     setMainPhoto: (id: string) => requests.post(`/photos/${id}/setMain`, {}),
     deletePhoto: (id: string) => requests.del(`/photos/${id}`),
     updateProfile: (profile: Partial<Profile>) => requests.put(`/profiles`, profile),
-    updateFollowing: (username:string) => requests.post(`/follow/${username}`, {}),
+    updateFollowing: (username: string) => requests.post(`/follow/${username}`, {}),
     listFollowings: (username: string, predicate: string) => requests.get<Profile[]>(`/follow/${username}?predicate=${predicate}`),
     listActivities: (username: string, predicate: string) => requests.get<UserActivity[]>(`/profiles/${username}/activities?predicate=${predicate}`)
 }
